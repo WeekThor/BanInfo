@@ -1,8 +1,8 @@
-﻿name: BanInfo
-main: TSt\Loader
+﻿name: "BanInfo"
+main: BanInfo\Loader
 api: 3.0.1
-version: 1.0
-author: TSt
+version: 1.2.4
+authors: [TableStudio Team (TSt), "WeekThor"]
 description: "Информация о бане"
 permissions:
   baninfo.commands.baninfo:
@@ -10,4 +10,7 @@ permissions:
     default: op
   baninfo.commands.banip:
     description: '/bi-ip'
+    default: op
+  baninfo.commands.bancid:
+    description: '/bi-cid'
     default: op
