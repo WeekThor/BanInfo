@@ -3,7 +3,7 @@ namespace BanInfo\APIs;
 
 class BanInfo{
     private $file;
-   // private $bans;
+    private $bans;
     public function  __construct(string $file) {
        $this->file = $file;
        $this->load();
