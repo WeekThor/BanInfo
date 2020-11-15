@@ -11,9 +11,9 @@ use pocketmine\plugin\PluginBase;
 class Loader extends PluginBase{
   public function onLoad(){
     $this->registerCommands();
-    $this->getServer()->getLogger()->info("§2[BanInfo]§a Загрузка....");
+    $this->getServer()->getLogger()->info("§2[BanInfo]§a Loading....");
     if(!(file_exists($this->getServer()->getDataPath(). 'banned-ips.txt') and file_exists($this->getServer()->getDataPath(). 'banned-players.txt') and file_exists($this->getServer()->getDataPath(). 'banned-cids.txt'))){
-        $this->getServer()->getLogger()->info("§4[BanInfo]§c Плагин не может корректно работать на данном сервере!");
+        $this->getServer()->getLogger()->info("§4[BanInfo]§c Plugin can't work on your server, sorry! Need banned-players.txt and banned-ips.txt files!");
         $this->setEnabled(false);
     }
   }

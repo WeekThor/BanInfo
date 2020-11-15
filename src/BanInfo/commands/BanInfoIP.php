@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 
 class BanInfoIP extends API{
 	public function __construct(Loader $plugin){
-        parent::__construct($plugin, "baninfo-ip", "Информация о бане", "/bi-ip <ник>", null, ["bi-ip", "tbiip", "biip"]);
+        parent::__construct($plugin, "baninfo-ip", "Information about IP ban", "/bi-ip <IP aress>", null, ["bi-ip", "tbiip", "biip"]);
         $this->setPermission("baninfo.commands.baninfo.ip");
     }
 
@@ -20,7 +20,7 @@ class BanInfoIP extends API{
 		}
         
 		if(count($args) === 0){
-            $sender->sendMessage("§4Использование: §c/bi-ip <IP адрес>");
+            $sender->sendMessage("§4Use: §c/bi-ip <IP adress>");
 
 			return false;
 		}
@@ -29,18 +29,18 @@ class BanInfoIP extends API{
         $baninfo = $banInfoClass->get($value);
         
         if($baninfo == null){
-            $sender->sendMessage('§4[BanInfo] §cОшибка: Такого IP адреса нет в бан-листе!');
+            $sender->sendMessage('§4[BanInfo] §cError: IP adress not banned!');
         }else{
-            $date = date('j '.$dateFormatter->getMonth(date('n', $baninfo->bannedDate)).' Y H:i:s', $baninfo->bannedDate);
+            $date = date('j M Y H:i:s', $baninfo->bannedDate);
             if($baninfo->unbanDate != null){
-                $until = date('j '.$dateFormatter->getMonth(date('n', $baninfo->unbanDate)).' Y H:i:s', $baninfo->unbanDate);
+                $until = date('j M Y H:i:s', $baninfo->unbanDate);
             }else{
-                $until = "Никогда";
+                $until = "Never";
             }
             if($baninfo->reason == ''){
-                $baninfo->reason = "§7(не указана)";
+                $baninfo->reason = "§7(not specified)";
             }
-            $sender->sendMessage("§6--=== §c".$baninfo->player."§6 ===--\n§6Забанен:§c ".$date."\n§6Забанил: §c".$baninfo->bannedBy."\n§6Окончание: §c".$until."\n§6Причина бана: §c".$baninfo->reason);
+            $sender->sendMessage("§6--=== §c".$baninfo->player."§6 ===--\n§6Banned:§c ".$date."\n§6Banned by: §c".$baninfo->bannedBy."\n§6Ban until: §c".$until."\n§6Ban reason: §c".$baninfo->reason);
         }
         
     }
