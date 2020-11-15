@@ -1,16 +1,16 @@
 ﻿name: "BanInfo"
-main: BanInfo\Loader
+main: TSt\BanInfo\Loader
 api: 3.0.1
 version: 1.13.0
 authors: [TableStudio Team (TSt), "WeekThor"]
-description: "Infromation about banned players or ips"
+description: "Inforamtion about banned players or ips"
 permissions:
   baninfo.commands.baninfo:
-    description: '/bi'
+    description: 'Acceess to command /bi'
     default: op
   baninfo.commands.banip:
-    description: '/bi-ip'
+    description: 'Acceess to command /bi-ip'
     default: op
-  baninfo.commands.bancid:
-    description: '/bi-cid'
-    default: op
+ # baninfo.commands.bancid:
+ #   description: 'Acceess to command /bi-cid' # actualy not work
+ #   default: op
