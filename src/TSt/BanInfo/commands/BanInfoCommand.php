@@ -2,45 +2,53 @@
 namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\BanInfoClass as BanInfo;
+use TSt\BanInfo\APIs\BanInfoClass;
 use TSt\BanInfo\APIs\API;
-use TSt\BanInfo\APIs\DateFormatter;
+use TSt\BanInfo\TranslateClass;
+
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 
 class BanInfoCommand extends API{
 	public function __construct(Loader $plugin){
-        parent::__construct($plugin, "baninfo", "Information about ban", "/bi <nick>", null, ["bi", "tbi"]);
+        parent::__construct($plugin, "baninfo", "Plyer active ban information", "/bi <ник>", null, ["bi", "tbi"]);
         $this->setPermission("baninfo.commands.baninfo");
     }
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
-	    $dateFormatter = new DateFormatter();
+	    if($sender instanceof Player){
+	        $lang = explode('_', $sender->getLocale());
+	        $translation = new TranslateClass($this->getPlugin(), mb_strtolower($lang[0], "UTF-8"));
+	    }else{
+	        $translation = new TranslateClass($this->getPlugin());
+	    }
+	    $this->setPermissionMessage($translation->getTranslation("baninfo.no_perminssions"));
+	    
 	    if(!$this->testPermission($sender)){
-	        return true;
+	        return false;
 	    }
 	    
 	    if(count($args) === 0){
-	        $sender->sendMessage("§4Use: §c/bi <nick>");
-	        
+	        $sender->sendMessage($translation->getTranslation("baninfo.player.usage"));
 	        return false;
 	    }
 	    $value = array_shift($args);
-	    $banInfoClass = new BanInfo($sender->getServer()->getDataPath() . 'banned-players.txt');
+	    $banInfoClass = new BanInfoClass($this->getPlugin(), false);
 	    $baninfo = $banInfoClass->get($value);
 	    
 	    if($baninfo == null){
-	        $sender->sendMessage('§4[BanInfo] §cError: player not banned.');
+	        $sender->sendMessage($translation->getTranslation("baninfo.player.not_banned"));
 	    }else{
-	        $date = date('j M Y H:i:s', $baninfo->bannedDate);
+	        $date = date('j ', $baninfo->bannedDate).$translation->getTranslatedMonth(date('n', $baninfo->bannedDate)).date(' Y H:i:s', $baninfo->bannedDate);
 	        if($baninfo->unbanDate != null){
-	            $until = date('j M Y H:i:s', $baninfo->unbanDate);
+	            $until = date('j ', $baninfo->unbanDate).$translation->getTranslatedMonth(date('n', $baninfo->unbanDate)).date(' Y H:i:s', $baninfo->unbanDate);
 	        }else{
-	            $until = "Never";
+	            $until = $translation->getTranslation("baninfo.never");
 	        }
 	        if($baninfo->reason == ''){
-	            $baninfo->reason = "§7(not specified)";
+	            $baninfo->reason = $translation->getTranslation("baninfo.reason.not_specified");
 	        }
-	        $sender->sendMessage("§6--=== §c".$baninfo->player."§6 ===--\n§6Banned:§c ".$date."\n§6Banned by: §c".$baninfo->bannedBy."\n§6Ban until: §c".$until."\n§6Ban reason: §c".$baninfo->reason);
+	        $sender->sendMessage($translation->getTranslation("baninfo.info_message", [$baninfo->player, $date, $baninfo->bannedBy, $until, $baninfo->reason]));
 	    }
     }
 }

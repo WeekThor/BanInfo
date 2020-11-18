@@ -1,16 +1,22 @@
 ﻿name: "BanInfo"
 main: TSt\BanInfo\Loader
 api: 3.0.1
-version: 1.13.0
+version: 1.14.0 [RUS]
 authors: [TableStudio Team (TSt), "WeekThor"]
-description: "Inforamtion about banned players or ips"
+description: "Информация о бане"
 permissions:
   baninfo.commands.baninfo:
     description: 'Acceess to command /bi'
     default: op
-  baninfo.commands.banip:
+  baninfo.commands.baninfo.ip:
     description: 'Acceess to command /bi-ip'
     default: op
- # baninfo.commands.bancid:
- #   description: 'Acceess to command /bi-cid' # actualy not work
- #   default: op
+  baninfo.commands.history:
+    description: 'Acceess to view player ban history'
+    default: op
+  baninfo.commands.clearhistory:
+    description: 'Acceess to clear player history'
+    default: op
+  baninfo.commands.bans2history:
+    description: 'Acceess to command /bans2history'
+    default: op

@@ -1,60 +1,53 @@
 <?php
 namespace TSt\BanInfo\APIs;
 
+use TSt\BanInfo\Loader;
+use TSt\BanInfo\APIs\BannedPlayer;
+
 class BanInfoClass{
-    private $file;
     private $bans;
-    public function  __construct(string $file) {
-       $this->file = $file;
-       $this->load();
+    private $plugin;
+    private $needIPInfo;
+    public function  __construct(Loader $plugin, bool $IPList = false) {
+       $this->plugin = $plugin;
+       $this->needIPInfo = $IPList;
     }
     
-    private function load() {
-        $bans = file_get_contents($this->file);
-       // echo $bans;
-        $bans = str_replace(" victim name | ban date | banned by | banned until | reason\n", '', $bans);
-        $bans = explode("#", $bans);
-        unset($bans[0]);
-        unset($bans[1]);
-        
-        $bans = implode('#', $bans);
-        $banslist = explode("\n", $bans);
-        $banlist = array();
-        for($k = 0; $k<count($banslist); $k++){
-            $banedinfo = explode("|", $banslist[$k]);
-            try{
-                $banlist[$banedinfo[0]] = new BannedPlayer($banedinfo[0], strtotime($banedinfo[1]), $banedinfo[2], strtotime($banedinfo[3]), $banedinfo[4]);
-            }catch (\Exception $e){
-                //...
-            }
-        }
-        $this->bans = $banlist;
-    }
     
+    /**
+     * Get banned player information or null if not banned
+     * Now PMMP api.............
+     * @param string $name
+     * @return BannedPlayer|NULL
+     */
     public function get($name) : ? BannedPlayer{
         $name = mb_strtolower($name, "UTF-8");
-        if(isset($this->bans[$name])){
-            return $this->bans[$name];
+        if($this->needIPInfo){
+            $banEntry = $this->plugin->getServer()->getIPBans()->getEntry($name);
+        }else{
+            $banEntry = $this->plugin->getServer()->getNameBans()->getEntry($name);
+        }
+        
+        if($banEntry != null){
+            $banUntil = ($banEntry->getExpires() == null) ? null : $banEntry->getExpires()->getTimestamp();
+            return new BannedPlayer($banEntry->getName(), $banEntry->getCreated()->getTimestamp(), $banEntry->getSource(), $banUntil, $banEntry->getReason());
         }else{
             return null;
         }
         
     }
-}
-
-class BannedPlayer{
     
-    public $player;
-    public $bannedDate;
-    public $bannedBy;
-    public $unbanDate;
-    public $reason;
-    
-    public function  __construct(string $name, int $date, string $admin, int $banUntil, string $reason) {
-        $this->player = $name;
-        $this->bannedBy = $admin;
-        $this->bannedDate = $date;
-        $this->reason = $reason;
-        $this->unbanDate = $banUntil;
+    /**
+     * Get all banned players
+     * @return array
+     */
+    public function getAll() : array{
+        $bans = $this->plugin->getServer()->getNameBans()->getEntries();
+        $list = [];
+        foreach($bans as $k=>$v){
+            $banUntil = ($v->getExpires() == null) ? null : $v->getExpires()->getTimestamp();
+            $list[] = new BannedPlayer($v->getName(), $v->getCreated()->getTimestamp(), $v->getSource(), $banUntil, $v->getReason());
+        }
+        return $list;
     }
 }
