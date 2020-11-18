@@ -54,13 +54,10 @@ class Loader extends PluginBase implements Listener{
 	 * @return BanInfoClass
 	 */
 	public function getBanInfo($file = 'banned-players.txt') : BanInfoClass {
-	    switch($file){
-	        case 'banned-players.txt':
-	            return new BanInfoClass($this);
-	            break;
-	        case 'banned-ips.txt':
-	            return new BanInfoClass($this, true);
-	            break;
+	    if($file == 'banned-ips.txt'){
+		return new BanInfoClass($this, true);
+	    }else{
+		return new BanInfoClass($this); 
 	    }
 	}
 	
