@@ -61,8 +61,6 @@ class Loader extends PluginBase implements Listener{
 	        case 'banned-ips.txt':
 	            return new BanInfoClass($this, true);
 	            break;
-	        default:
-	            return null;
 	    }
 	}
 	
