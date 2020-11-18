@@ -34,7 +34,7 @@ class TranslateClass{
             return $message;
         }catch (\Exception $e){
             return $e->getMessage();
-            $plugin->getServer()->getLogger()->error($e->getMessage());
+            //$plugin->getServer()->getLogger()->error($e->getMessage());
         }
     }
     
@@ -53,7 +53,7 @@ class TranslateClass{
             return $locales[$this->lang]['month'][$month-1];
         }catch (\Exception $e){
             return $e->getMessage();
-            $this->plugin->getServer()->getLogger()->error($e->getMessage());
+            //$this->plugin->getServer()->getLogger()->error($e->getMessage());
         }
     }
 }
