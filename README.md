@@ -4,7 +4,7 @@ Information about ban and player's ban history
 # Features
 - Display information about player's or IP's active ban
 - Display player's ban history since  plugin installation
-- Multi-language support (currently English and Russian) individually for each player based on the device lang
+- Multi-language support individually for each player based on the device lang
 
 # Commands
 - /bi &lt;player&gt; – Display information about banned player
