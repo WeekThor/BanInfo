@@ -3,7 +3,6 @@ namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
 use TSt\BanInfo\APIs\API;
-use TSt\BanInfo\APIs\BanInfoClass;
 use TSt\BanInfo\TranslateClass;
 
 use pocketmine\command\CommandSender;

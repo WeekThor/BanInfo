@@ -1,9 +1,9 @@
-name: "BanInfo"
+﻿name: "BanInfo"
 main: TSt\BanInfo\Loader
 api: 3.0.1
-version: 1.14.0
-authors: [TableStudio Team (TSt), "WeekThor"]
-description: "Information about ban and player's ban history"
+version: 1.14.1
+author: "WeekThor"
+description: "Information about banned player or IP and player's ban history"
 permissions:
   baninfo.commands.baninfo:
     description: 'Acceess to command /bi'

@@ -2,7 +2,6 @@
 namespace TSt\BanInfo\APIs;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\BannedPlayer;
 
 class BanInfoClass{
     private $bans;
@@ -17,7 +16,7 @@ class BanInfoClass{
     /**
      * Get banned player information or null if not banned
      * Now PMMP api.............
-     * @param string $name
+     * @param string $name player name
      * @return BannedPlayer|NULL
      */
     public function get($name) : ? BannedPlayer{
