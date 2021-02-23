@@ -13,20 +13,21 @@ use TSt\BanInfo\commands\BanHistoryCommand;
 use TSt\BanInfo\APIs\BannedPlayer;
 use TSt\BanInfo\commands\Banlist2HistoryCommand;
 use TSt\BanInfo\commands\ClearHistoryCommand;
+use TSt\BanInfo\APIs\BanInfoApi;
 
 class Loader extends PluginBase implements Listener{
-  public function onLoad(){
-    $this->registerCommands();
-    if(!is_dir($this->getDataFolder().'players')){
-        mkdir($this->getDataFolder().'players');
+    public function onLoad(){
+        $this->registerCommands();
+        if(!is_dir($this->getDataFolder().'players')){
+            mkdir($this->getDataFolder().'players');
+        }
     }
-  }
   
-  public function onEnable(){
-      $this->getServer()->getPluginManager()->registerEvents($this, $this);
-  }
+    public function onEnable(){
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
   
-  private function unregisterCommands(array $commands){
+    private function unregisterCommands(array $commands){
         $commandmap = $this->getServer()->getCommandMap();
         foreach($commands as $commandlabel){
             $command = $commandmap->getCommand($commandlabel);
@@ -82,7 +83,7 @@ class Loader extends PluginBase implements Listener{
 	
 	
 	/**
-	 * Check if kicked player was banned and add to history
+	 * Check if kicked player was banned and add to history.
 	 * Information about ban will be recorder only if the banned player was online
 	 * or if banned player tries to connects to the server
 	 * @param PlayerKickEvent $e
@@ -90,57 +91,23 @@ class Loader extends PluginBase implements Listener{
 	public function onPlayerKick(PlayerKickEvent $e){
 	    $player = $e->getPlayer();
 	    $name = mb_strtolower($player->getName(), "UTF-8");
-	    $banInfo = new BanInfoClass($this);
-	    $ban = $banInfo->get($player->getName());
-	    if($ban != null){
-	        $alreadySeted = false;
-	        if(file_exists($this->getDataFolder().'players/'.$name.'.json')){
-	           $banRecords = json_decode(file_get_contents($this->getDataFolder().'players/'.$name.'.json'), true);
-	        }else{
-	            $banRecords = array('bans_count' => 0, 'bans' => []);
-	        }
-	        foreach($banRecords['bans'] as $k=>$v){
-	            if($v['bannedDate'] == $ban->bannedDate){
-	                $alreadySeted = true;
-	            }
-	        }
-	        if(!$alreadySeted){
-    	        $banRecords['bans_count'] = $banRecords['bans_count']+1;
-    	        $banRecords['bans'][] = (array)$ban;
-    	        $h = fopen($this->getDataFolder().'players/'.$name.'.json', 'w');
-    	        fwrite($h, json_encode($banRecords));
-    	        fclose($h);
-	        }
-	    }
+	    $api = new BanInfoApi($this);
+	    $api->updateHistory($name);
 	}
-	
 	
 	/**
-	 * Update player ban history
+	 * @param string $api_ver
+	 * @return BanInfoApi|null
 	 */
-	public function updateHistory(BannedPlayer $info) {
-	    if($info != null){
-	        $alreadyAdded = false;
-	        $name = mb_strtolower($info->player, "UTF-8");
-	        if(file_exists($this->getDataFolder().'players/'.$name.'.json')){
-	            $banRecords = json_decode(file_get_contents($this->getDataFolder().'players/'.$name.'.json'), true);
-	        }else{
-	            $banRecords = array('bans_count' => 0, 'bans' => []);
-	        }
-	        foreach($banRecords['bans'] as $k=>$v){
-	            if($v['bannedDate'] == $info->bannedDate){
-	                $alreadyAdded = true;
-	            }
-	        }
-	        if(!$alreadyAdded){
-	            $banRecords['bans_count'] = $banRecords['bans_count']+1;
-	            $banRecords['bans'][] = (array)$info;
-	            $h = fopen($this->getDataFolder().'players/'.$name.'.json', 'w');
-	            fwrite($h, json_encode($banRecords));
-	            fclose($h);
-	        }
+	public function getAPI($api_ver){
+	    $api = new BanInfoApi($this);
+	    $max_ver = explode('.', $api->api_version);
+	    $ver = explode('.', $api_ver);
+	    if($max_ver[0] != $ver[0] OR ($ver[1] > $max_ver[1] OR ($ver[1] <= $max_ver[1] AND $ver[2] > $max_ver[2]))){
+	        return null;
+	    }else{
+	        return $api;
 	    }
 	}
-	
 	
 }

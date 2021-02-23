@@ -26,11 +26,11 @@ class TranslateClass{
         }
         $stat = fstat($resourse);
         $locale = json_decode(fread($resourse, $stat['size']), true);
+        fclose($resourse);
         $message = $locale[$message_name];
         for($k = 0; $k <count($placeholders); $k++){
             $message = str_replace('{'.$k.'}', $placeholders[$k], $message);
         }
-        fcloss($resourse);
         return $message;
     }
     
@@ -49,8 +49,8 @@ class TranslateClass{
         }
         $stat = fstat($resourse);
         $locale = json_decode(fread($resourse, $stat['size']), true);
-        $message = $locale['month'][$month-1];
         fclose($resourse);
+        $message = $locale['month'][$month-1];
         return $message;
     }
 }
