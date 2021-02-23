@@ -15,7 +15,6 @@ class BanInfoClass{
     
     /**
      * Get banned player information or null if not banned
-     * Now PMMP api.............
      * @param string $name player name
      * @return BannedPlayer|NULL
      */
