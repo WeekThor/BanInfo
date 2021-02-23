@@ -2,13 +2,13 @@
 namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\API;
+use TSt\BanInfo\APIs\CommandsClass;
 use TSt\BanInfo\TranslateClass;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
-class ClearHistoryCommand extends API{
+class ClearHistoryCommand extends CommandsClass{
 	public function __construct(Loader $plugin){
         parent::__construct($plugin, "clearhistory", "Clear player ban history", "/clearhistory <player>", null, [ "cleansoul"]);
         $this->setPermission("baninfo.commands.clearhistory");

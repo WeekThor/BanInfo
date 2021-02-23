@@ -2,14 +2,14 @@
 namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\API;
+use TSt\BanInfo\APIs\CommandsClass;
 use TSt\BanInfo\APIs\BanInfoClass;
 use TSt\BanInfo\TranslateClass;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
-class BanInfoIP extends API{
+class BanInfoIP extends CommandsClass{
 	public function __construct(Loader $plugin){
         parent::__construct($plugin, "baninfo-ip", "IP active ban information", "/bi-ip <ник>", null, ["bi-ip", "tbiip", "biip"]);
         $this->setPermission("baninfo.commands.baninfo.ip");

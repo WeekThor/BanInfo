@@ -2,14 +2,15 @@
 namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\API;
+use TSt\BanInfo\APIs\CommandsClass;
 use TSt\BanInfo\APIs\BanInfoClass;
 use TSt\BanInfo\TranslateClass;
+use TSt\BanInfo\APIs\BanInfoApi;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
-class BanHistoryCommand extends API{
+class BanHistoryCommand extends CommandsClass{
 	public function __construct(Loader $plugin){
         parent::__construct($plugin, "playerbans", "Player's bans history", "/pbans <ник>", null, ["pbans"]);
         $this->setPermission("baninfo.commands.history");
@@ -29,7 +30,6 @@ class BanHistoryCommand extends API{
 	    }
 		if(count($args) === 0){
             $sender->sendMessage($translation->getTranslation("baninfo.history.usage"));
-
 			return false;
 		}
         $name = $args[0];
@@ -37,7 +37,8 @@ class BanHistoryCommand extends API{
         $banInfo = new BanInfoClass($this->getPlugin());
         $bInfo = $banInfo->get($name);
         if($bInfo != null){
-            $this->getPlugin()->updateHistory($bInfo);
+            $api = new BanInfoApi($this->getPlugin());
+            $api->updateHistory($bInfo);
         }
         if(file_exists($this->getPlugin()->getDataFolder().'players/'.$name.'.json')){
             $historyList = json_decode(file_get_contents($this->getPlugin()->getDataFolder().'players/'.$name.'.json'),true);

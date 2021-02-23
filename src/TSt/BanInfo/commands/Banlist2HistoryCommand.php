@@ -2,14 +2,15 @@
 namespace TSt\BanInfo\commands;
 
 use TSt\BanInfo\Loader;
-use TSt\BanInfo\APIs\API;
+use TSt\BanInfo\APIs\CommandsClass;
 use TSt\BanInfo\APIs\BanInfoClass;
 use TSt\BanInfo\TranslateClass;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use TSt\BanInfo\APIs\BanInfoApi;
 
-class Banlist2HistoryCommand extends API{
+class Banlist2HistoryCommand extends CommandsClass{
 	public function __construct(Loader $plugin){
         parent::__construct($plugin, "bans2history", "Export banlist to players history", "/exportbans", null, [ "portbanlist", "exportbans"]);
         $this->setPermission("baninfo.commands.bans2history");
@@ -33,7 +34,8 @@ class Banlist2HistoryCommand extends API{
 		$sender->sendMessage($translation->getTranslation("baninfo.export.start"));
 		foreach($bans as $v){
 		    $total++;
-		    $this->getPlugin()->updateHistory($v);
+		    $api = new BanInfoApi($this->getPlugin());
+		    $api->updateHistory($v);
 		}
 		$sender->sendMessage($translation->getTranslation("baninfo.export.end", [$total]));
     }
